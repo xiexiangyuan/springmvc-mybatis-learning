@@ -1,11 +1,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+             http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <context:component-scan base-package="com.iot.ssm.controller" />
+    <mvc:annotation-driven   />
     <!-- 配置Handler -->
-    <bean id="itemsController" name="/queryItems.action" class="com.iot.ssm.controller.ItemsController"/>
+    <bean id="itemsController" name="/query" class="com.iot.ssm.controller.ImplControllerOfController"/>
     <!-- 配置另一个Handler -->
-    <bean id="itemsController2" class="com.iot.ssm.controller.ItemsController2"/>
+    <bean id="itemsController2" class="com.iot.ssm.controller.HttpRequestController"/>
     <!-- 处理器映射器
     将bean的name作为url进行查找，需要在配置Handler时指定beanname(就是url)
     所有的映射器都实现了HandlerMapping接口
@@ -17,9 +23,8 @@
         <property name="mappings">
             <props>
                 <!-- 对 itemsController进行url映射-->
-                <prop key="/queryItems1.action">itemsController</prop>
-                <prop key="/queryItems2.action">itemsController</prop>
-                <prop key="/queryItems3.action">itemsController2</prop>
+                <!--<prop key="/hello">itemsController</prop>-->
+                <prop key="/httpImpl">itemsController2</prop>
             </props>
         </property>
     </bean>
@@ -35,6 +40,11 @@
     <!-- 视图解析器
     解析jsp,默认使用jstl,classpath下要有jstl的包
     -->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"/>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--&lt;!&ndash; 配置jsp路径的前缀 &ndash;&gt;-->
+        <!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
+        <!--&lt;!&ndash; 配置jsp路径的后缀 &ndash;&gt;-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    </bean>
 
 </beans>

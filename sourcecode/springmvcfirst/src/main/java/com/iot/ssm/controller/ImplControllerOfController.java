@@ -1,24 +1,22 @@
 package com.iot.ssm.controller;
 
 import com.iot.ssm.po.Items;
-import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by brian on 2016/2/19.
  */
-public class ItemsController2 implements HttpRequestHandler {
-    public void handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-            throws ServletException, IOException {
+public class ImplControllerOfController implements Controller {
+
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //调用service查找数据库，查询商品列表，这里使用静态数据模拟
         List<Items> itemsList = new ArrayList<Items>();
-
         //向list中填充静态数据
         Items items_1 = new Items();
         items_1.setName("联想笔记本");
@@ -33,11 +31,14 @@ public class ItemsController2 implements HttpRequestHandler {
         itemsList.add(items_1);
         itemsList.add(items_2);
 
-        //设置模型数据
-        httpServletRequest.setAttribute("itemsList", itemsList);
+        //返回ModelAndView
+        ModelAndView modelAndView = new ModelAndView();
+        //相当于request的setAttribute方法,在jsp页面中通过itemsList取数据
+        modelAndView.addObject("itemsList", itemsList);
+        modelAndView.addObject("name", request.getParameter("name"));
+        //指定视图
+        modelAndView.setViewName("/WEB-INF/jsp/items/itemsList.jsp");
 
-        //设置转发的视图
-        httpServletRequest.getRequestDispatcher("/WEB-INF/jsp/items/itemsList.jsp").forward(httpServletRequest, httpServletResponse);
-
+        return modelAndView;
     }
 }
